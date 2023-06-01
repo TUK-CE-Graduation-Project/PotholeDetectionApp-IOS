@@ -39,6 +39,10 @@ class DrawingBoundingBoxView: UIView {
     }
     
     func createLabelAndBox(prediction: VNRecognizedObjectObservation) {
+//        let confidence: Float = prediction.confidence
+//        guard confidence > 0.5 else{
+//            return
+//        }
         let labelString: String? = prediction.label
         let color: UIColor = labelColor(with: labelString ?? "N/A")
         

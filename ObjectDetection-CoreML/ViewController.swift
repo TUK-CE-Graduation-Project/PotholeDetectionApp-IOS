@@ -10,8 +10,12 @@ import UIKit
 import Vision
 import CoreMedia
 import AVFoundation
+import CoreLocation
 
-class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
+
+
+
+class ViewController: UIViewController, AVCapturePhotoCaptureDelegate, CLLocationManagerDelegate{
 
     // MARK: - UI Properties
     @IBOutlet weak var videoPreview: UIView!
@@ -23,6 +27,8 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     @IBOutlet weak var fpsLabel: UILabel!
     
     var photoOutput: AVCapturePhotoOutput!
+
+    private var locationManager:CLLocationManager?
 
     
     // MARK - Core ML model
@@ -58,6 +64,8 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        getUserLocation()
+        
         // setup the model
         setUpModel()
         
@@ -67,6 +75,137 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         // setup delegate for performance measurement
         👨‍🔧.delegate = self
     }
+    
+    func getUserLocation(){
+        locationManager = CLLocationManager()
+        locationManager?.requestWhenInUseAuthorization()
+        locationManager?.startUpdatingLocation()
+        locationManager?.delegate = self
+        locationManager?.allowsBackgroundLocationUpdates = true
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            print("Lat: \(location.coordinate.latitude) \nLng: \(location.coordinate.longitude)")
+        }
+    }
+    
+    func requestPOST() {
+            // [URL 지정 및 파라미터 값 지정 실시]
+        let urlComponents = URLComponents(string: "https://?/api/pothole/register")
+        let dicData = [
+            "potholeRegistrationRequest":[
+                "geotabId": 0,
+                "xacc": 0,
+                "yacc": 0,
+                "zacc": 0,
+                "point": [
+                    "x": 0,
+                    "y":0
+                    
+                ]
+            ] as [String : Any],
+            "video":"S"
+        ] as Dictionary<String, Any>?
+        let jsonData = try! JSONSerialization.data(withJSONObject: dicData!, options: [])
+
+            
+            // [http 통신 타입 및 헤더 지정 실시]
+            var requestURL = URLRequest(url: (urlComponents?.url)!)
+            requestURL.httpMethod = "POST" // POST
+            requestURL.addValue("application/json", forHTTPHeaderField: "Content-Type") // POST
+        requestURL.httpBody = jsonData
+
+            
+            // [http 요쳥을 위한 URLSessionDataTask 생성]
+            print("")
+            print("====================================")
+            print("[requestPOST : http post 요청 실시]")
+            print("url : ", requestURL)
+            print("====================================")
+            print("")
+            let dataTask = URLSession.shared.dataTask(with: requestURL) { (data, response, error) in
+
+                // [error가 존재하면 종료]
+                guard error == nil else {
+                    print("")
+                    print("====================================")
+                    print("[requestPOST : http post 요청 실패]")
+                    print("fail : ", error?.localizedDescription ?? "")
+                    print("====================================")
+                    print("")
+                    return
+                }
+
+                // [status 코드 체크 실시]
+                let successsRange = 200..<300
+                guard let statusCode = (response as? HTTPURLResponse)?.statusCode, successsRange.contains(statusCode)
+                else {
+                    print("")
+                    print("====================================")
+                    print("[requestPOST : http post 요청 에러]")
+                    print("error : ", (response as? HTTPURLResponse)?.statusCode ?? 0)
+                    print("msg : ", (response as? HTTPURLResponse)?.description ?? "")
+                    print("====================================")
+                    print("")
+                    return
+                }
+
+
+                // [response 데이터 획득, json 형태로 변환]
+                let resultCode = (response as? HTTPURLResponse)?.statusCode ?? 0
+                let resultLen = data! // 데이터 길이
+                do {
+                    guard let jsonConvert = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else {
+                        print("")
+                        print("====================================")
+                        print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
+                        print("error : ", "json 형식 데이터 convert 에러")
+                        print("====================================")
+                        print("")
+                        return
+                    }
+                    guard let JsonResponse = try? JSONSerialization.data(withJSONObject: jsonConvert, options: .prettyPrinted) else {
+                        print("")
+                        print("====================================")
+                        print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
+                        print("error : ", "json 형식 데이터 변환 에러")
+                        print("====================================")
+                        print("")
+                        return
+                    }
+                    guard let resultString = String(data: JsonResponse, encoding: .utf8) else {
+                        print("Error: Couldn't print JSON in String")
+                        print("")
+                        print("====================================")
+                        print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
+                        print("error : ", "json 형식 데이터 >> String 변환 에러")
+                        print("====================================")
+                        print("")
+                        return
+                    }
+                    print("")
+                    print("====================================")
+                    print("[requestPOST_BODY_JSON : http post body json 요청 성공]")
+                    print("resultCode : ", resultCode)
+                    print("resultLen : ", resultLen)
+                    print("resultString : ", resultString)
+                    print("====================================")
+                    print("")
+                } catch {
+                    print("")
+                    print("====================================")
+                    print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
+                    print("error : ", "Trying to convert JSON data to string")
+                    print("====================================")
+                    print("")
+                    return
+                }
+            }
+
+            // network 통신 실행
+            dataTask.resume()
+        }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -85,6 +224,8 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
     // MARK: - Setup Core ML
     func setUpModel() {
         guard let objectDectectionModel = objectDectectionModel else { fatalError("fail to load the model") }
+
+
         if let visionModel = try? VNCoreMLModel(for: objectDectectionModel.model) {
             self.visionModel = visionModel
             request = VNCoreMLRequest(model: visionModel, completionHandler: visionRequestDidComplete)
@@ -94,6 +235,25 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate {
         }
     }
 
+    
+    // MARK: - Setup Core ML
+//    func setUpModel() {
+//        guard let objectDetectionModel = objectDectectionModel else {
+//            fatalError("모델을 로드하지 못했습니다.")
+//        }
+//
+//        do {
+//            let visionModel = try VNCoreMLModel(for: objectDetectionModel.model)
+//            self.visionModel = visionModel
+//            request = VNCoreMLRequest(model: visionModel, completionHandler: visionRequestDidComplete)
+//            request?.imageCropAndScaleOption = .scaleFill
+//            request?.configuration.confidenceThreshold = 0.7 // Adjust the value as desired
+//
+//        } catch {
+//            fatalError("비전 모델을 생성하지 못했습니다: \(error)")
+//        }
+//    }
+    
     // MARK: - SetUp Video
     func setUpCamera() {
         photoOutput = AVCapturePhotoOutput()
@@ -192,8 +352,11 @@ extension ViewController {
         if let predictions = request.results as? [VNRecognizedObjectObservation] {
 //            print(predictions.first?.labels.first?.identifier ?? "nil")
 //            print(predictions.first?.labels.first?.confidence ?? -1)
+            let threshold: Float = 0.5 // Set the confidence threshold here
+            _ = predictions.filter { $0.confidence >= threshold }
+
             
-            if predictions.contains(where: { $0.label == "pothole" }) {
+            if predictions.contains(where: { $0.label == "pothole"})&&predictions.contains(where: { $0.confidence >= threshold }) {
                         // Capture a photo
                         capturePhoto()
                     }
@@ -216,6 +379,33 @@ extension ViewController {
         self.semaphore.signal()
     }
 }
+
+//func drawVisionRequestResults(_ results: [Any]) {
+//       CATransaction.begin()
+//       CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+//       detectionOverlay.sublayers = nil // remove all the old recognized objects
+//       for observation in results where observation is VNRecognizedObjectObservation {
+//           guard let objectObservation = observation as? VNRecognizedObjectObservation else {
+//               continue
+//           }
+//           // Select only the label with the highest confidence.
+//           let topLabelObservation = objectObservation.labels[0]
+//           let confidenceThreshold: Float = 0.5
+//           if topLabelObservation.confidence > confidenceThreshold {
+//                           let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
+//
+//                           let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds)
+//
+//                           let textLayer = self.createTextSubLayerInBounds(objectBounds,
+//                                                                           identifier: topLabelObservation.identifier,
+//                                                                           confidence: topLabelObservation.confidence)
+//                           shapeLayer.addSublayer(textLayer)
+//                           detectionOverlay.addSublayer(shapeLayer)
+//           }
+//       }
+//       self.updateLayerGeometry()
+//       CATransaction.commit()
+//   }
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

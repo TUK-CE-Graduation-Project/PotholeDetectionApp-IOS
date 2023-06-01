@@ -1,0 +1,15 @@
+{
+  "MLModelVersionStringKey" : "8.0.96",
+  "MLModelDescriptionKey" : "Ultralytics pothole_best model trained on pothole.yaml",
+  "MLModelCreatorDefinedKey" : {
+    "stride" : "32",
+    "Confidence threshold" : "0.25",
+    "IoU threshold" : "0.45",
+    "task" : "detect",
+    "imgsz" : "[640, 640]",
+    "batch" : "1",
+    "names" : "{0: 'pothole'}"
+  },
+  "MLModelAuthorKey" : "Ultralytics",
+  "MLModelLicenseKey" : "AGPL-3.0 https:\/\/ultralytics.com\/license"
+}
