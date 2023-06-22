@@ -2,8 +2,6 @@
 //  ViewController.swift
 //  SSDMobileNet-CoreML
 //
-//  Created by GwakDoyoung on 01/02/2019.
-//  Copyright © 2019 tucan9389. All rights reserved.
 //
 
 import UIKit
@@ -31,13 +29,6 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate, CLLocatio
     private var locationManager:CLLocationManager?
 
     
-    // MARK - Core ML model
-    // YOLOv3(iOS12+), YOLOv3FP16(iOS12+), YOLOv3Int8LUT(iOS12+)
-    // YOLOv3Tiny(iOS12+), YOLOv3TinyFP16(iOS12+), YOLOv3TinyInt8LUT(iOS12+)
-    // MobileNetV2_SSDLite(iOS12+), ObjectDetector(iOS12+)
-    // yolov5n(iOS13+), yolov5s(iOS13+), yolov5m(iOS13+), yolov5l(iOS13+), yolov5x(iOS13+)
-    // yolov5n6(iOS13+), yolov5s6(iOS13+), yolov5m6(iOS13+), yolov5l6(iOS13+), yolov5x6(iOS13+)
-    // yolov8n(iOS14+), yolov8s(iOS14+), yolov8m(iOS14+), yolov8l(iOS14+), yolov8x(iOS14+)
     lazy var objectDectectionModel = { return try? ObjectDetector() }()
     
     // MARK: - Vision Properties
@@ -236,24 +227,6 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate, CLLocatio
     }
 
     
-    // MARK: - Setup Core ML
-//    func setUpModel() {
-//        guard let objectDetectionModel = objectDectectionModel else {
-//            fatalError("모델을 로드하지 못했습니다.")
-//        }
-//
-//        do {
-//            let visionModel = try VNCoreMLModel(for: objectDetectionModel.model)
-//            self.visionModel = visionModel
-//            request = VNCoreMLRequest(model: visionModel, completionHandler: visionRequestDidComplete)
-//            request?.imageCropAndScaleOption = .scaleFill
-//            request?.configuration.confidenceThreshold = 0.7 // Adjust the value as desired
-//
-//        } catch {
-//            fatalError("비전 모델을 생성하지 못했습니다: \(error)")
-//        }
-//    }
-    
     // MARK: - SetUp Video
     func setUpCamera() {
         photoOutput = AVCapturePhotoOutput()
@@ -280,16 +253,47 @@ class ViewController: UIViewController, AVCapturePhotoCaptureDelegate, CLLocatio
             }
         }
     }
+    
+    // Add the following properties to your class
+    var isPhotoCaptureEnabled = true
+    var lastPhotoCaptureTime: Date?
+
+    // Update the capturePhoto() method
     func capturePhoto() {
+        guard isPhotoCaptureEnabled else {
+            return
+        }
+        
         guard let videoPreviewLayer = videoCapture.previewLayer,
               let connection = videoPreviewLayer.connection,
               connection.isEnabled else {
             return
         }
         
+        let currentTime = Date()
+        if let lastCaptureTime = lastPhotoCaptureTime, currentTime.timeIntervalSince(lastCaptureTime) < 2.0 {
+            // Less than 3 seconds have passed since the last capture
+            return
+        }
+        
+        lastPhotoCaptureTime = currentTime
+        
         let settings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
+
+
+
+//    func capturePhoto() {
+//        guard let videoPreviewLayer = videoCapture.previewLayer,
+//              let connection = videoPreviewLayer.connection,
+//              connection.isEnabled else {
+//            return
+//        }
+//
+//        let settings = AVCapturePhotoSettings()
+//        photoOutput.capturePhoto(with: settings, delegate: self)
+//    }
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let imageData = photo.fileDataRepresentation(), let image = UIImage(data: imageData) {
@@ -352,7 +356,7 @@ extension ViewController {
         if let predictions = request.results as? [VNRecognizedObjectObservation] {
 //            print(predictions.first?.labels.first?.identifier ?? "nil")
 //            print(predictions.first?.labels.first?.confidence ?? -1)
-            let threshold: Float = 0.5 // Set the confidence threshold here
+            let threshold: Float = 0.65 // Set the confidence threshold here
             _ = predictions.filter { $0.confidence >= threshold }
 
             
