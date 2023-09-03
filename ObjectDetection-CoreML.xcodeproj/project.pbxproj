@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,13 @@
 		554F14AE220362DA00B828B0 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554F14AD220362DA00B828B0 /* VideoCapture.swift */; };
 		558918ED2208218800F182BA /* DrawingBoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558918EC2208218800F182BA /* DrawingBoundingBoxView.swift */; };
 		558918EF22089FFE00F182BA /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558918EE22089FFE00F182BA /* Measure.swift */; };
+		B9A92EA72A9DC6ED00797442 /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EA62A9DC6ED00797442 /* ServerManager.swift */; };
+		B9A92EAD2AA1D4CB00797442 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EAC2AA1D4CB00797442 /* LoadingViewController.swift */; };
+		B9A92EB12AA37FAD00797442 /* ObjectDetectingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EB02AA37FAD00797442 /* ObjectDetectingViewController.swift */; };
+		B9A92EB42AA3838200797442 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = B9A92EB32AA3838200797442 /* SnapKit */; };
+		B9A92EB62AA385C300797442 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EB52AA385C300797442 /* MapViewController.swift */; };
+		B9A92EBC2AA38C4F00797442 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EBB2AA38C4F00797442 /* MapView.swift */; };
+		B9A92EBE2AA38D7E00797442 /* MapView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9A92EBD2AA38D7E00797442 /* MapView.storyboard */; };
 		B9D47F2F2A1F6372009538D9 /* ObjectDetector.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = B9D47F2E2A1F6372009538D9 /* ObjectDetector.mlpackage */; };
 		C427E6B228C5D85B001279AD /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 553366CE220489DD00A67647 /* UIImage+CVPixelBuffer.swift */; };
 		C427E6C928C5DAF3001279AD /* IMG_8564.JPG in Resources */ = {isa = PBXBuildFile; fileRef = C427E6C828C5DAF3001279AD /* IMG_8564.JPG */; };
@@ -47,6 +54,12 @@
 		554F14AD220362DA00B828B0 /* VideoCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
 		558918EC2208218800F182BA /* DrawingBoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingBoundingBoxView.swift; sourceTree = "<group>"; };
 		558918EE22089FFE00F182BA /* Measure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
+		B9A92EA62A9DC6ED00797442 /* ServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
+		B9A92EAC2AA1D4CB00797442 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		B9A92EB02AA37FAD00797442 /* ObjectDetectingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDetectingViewController.swift; sourceTree = "<group>"; };
+		B9A92EB52AA385C300797442 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		B9A92EBB2AA38C4F00797442 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		B9A92EBD2AA38D7E00797442 /* MapView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MapView.storyboard; sourceTree = "<group>"; };
 		B9D47F2E2A1F6372009538D9 /* ObjectDetector.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = ObjectDetector.mlpackage; sourceTree = "<group>"; };
 		C427E6C828C5DAF3001279AD /* IMG_8564.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = IMG_8564.JPG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -63,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A92EB42AA3838200797442 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,15 +114,21 @@
 		554F149A220362AB00B828B0 /* ObjectDetection-CoreML */ = {
 			isa = PBXGroup;
 			children = (
+				B9A92EA62A9DC6ED00797442 /* ServerManager.swift */,
+				B9A92EAC2AA1D4CB00797442 /* LoadingViewController.swift */,
+				554F14A4220362AC00B828B0 /* LaunchScreen.storyboard */,
 				554F149F220362AB00B828B0 /* Main.storyboard */,
+				B9A92EB52AA385C300797442 /* MapViewController.swift */,
+				B9A92EBB2AA38C4F00797442 /* MapView.swift */,
 				554F149B220362AB00B828B0 /* AppDelegate.swift */,
 				554F149D220362AB00B828B0 /* ViewController.swift */,
+				B9A92EB02AA37FAD00797442 /* ObjectDetectingViewController.swift */,
 				558918EC2208218800F182BA /* DrawingBoundingBoxView.swift */,
 				71B8322322E2B0BC00207D05 /* ultils */,
 				71B8322222E2B0B200207D05 /* mlmodel */,
 				554F14A2220362AC00B828B0 /* Assets.xcassets */,
 				554F14A7220362AC00B828B0 /* Info.plist */,
-				554F14A4220362AC00B828B0 /* LaunchScreen.storyboard */,
+				B9A92EBD2AA38D7E00797442 /* MapView.storyboard */,
 			);
 			path = "ObjectDetection-CoreML";
 			sourceTree = "<group>";
@@ -165,6 +185,9 @@
 			dependencies = (
 			);
 			name = "ObjectDetection-CoreML";
+			packageProductDependencies = (
+				B9A92EB32AA3838200797442 /* SnapKit */,
+			);
 			productName = "SSDMobileNet-CoreML";
 			productReference = 554F1498220362AB00B828B0 /* ObjectDetection-CoreML.app */;
 			productType = "com.apple.product-type.application";
@@ -181,10 +204,12 @@
 				TargetAttributes = {
 					553366C22204898800A67647 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = "";
 						TestTargetID = 554F1497220362AB00B828B0;
 					};
 					554F1497220362AB00B828B0 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = "";
 					};
 				};
 			};
@@ -197,6 +222,9 @@
 				Base,
 			);
 			mainGroup = 554F148F220362AB00B828B0;
+			packageReferences = (
+				B9A92EB22AA3838200797442 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 554F1499220362AB00B828B0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -222,6 +250,7 @@
 			files = (
 				554F14A6220362AC00B828B0 /* LaunchScreen.storyboard in Resources */,
 				554F14A3220362AC00B828B0 /* Assets.xcassets in Resources */,
+				B9A92EBE2AA38D7E00797442 /* MapView.storyboard in Resources */,
 				554F14A1220362AB00B828B0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,12 +271,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9A92EB62AA385C300797442 /* MapViewController.swift in Sources */,
+				B9A92EBC2AA38C4F00797442 /* MapView.swift in Sources */,
 				554F149E220362AB00B828B0 /* ViewController.swift in Sources */,
 				558918EF22089FFE00F182BA /* Measure.swift in Sources */,
 				558918ED2208218800F182BA /* DrawingBoundingBoxView.swift in Sources */,
+				B9A92EB12AA37FAD00797442 /* ObjectDetectingViewController.swift in Sources */,
 				553366CF220489DD00A67647 /* UIImage+CVPixelBuffer.swift in Sources */,
 				B9D47F2F2A1F6372009538D9 /* ObjectDetector.mlpackage in Sources */,
 				554F14AE220362DA00B828B0 /* VideoCapture.swift in Sources */,
+				B9A92EAD2AA1D4CB00797442 /* LoadingViewController.swift in Sources */,
+				B9A92EA72A9DC6ED00797442 /* ServerManager.swift in Sources */,
 				554F149C220362AB00B828B0 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +321,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5WXJ4Z4H69;
+				DEVELOPMENT_TEAM = H7DM59QWSZ;
 				INFOPLIST_FILE = "ObjectDetection-CoreMLTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,7 +341,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5WXJ4Z4H69;
+				DEVELOPMENT_TEAM = H7DM59QWSZ;
 				INFOPLIST_FILE = "ObjectDetection-CoreMLTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -508,6 +542,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B9A92EB22AA3838200797442 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B9A92EB32AA3838200797442 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B9A92EB22AA3838200797442 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 554F1490220362AB00B828B0 /* Project object */;
 }
