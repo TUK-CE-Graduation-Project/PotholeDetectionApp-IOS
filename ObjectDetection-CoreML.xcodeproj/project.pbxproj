@@ -18,7 +18,6 @@
 		558918ED2208218800F182BA /* DrawingBoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558918EC2208218800F182BA /* DrawingBoundingBoxView.swift */; };
 		558918EF22089FFE00F182BA /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558918EE22089FFE00F182BA /* Measure.swift */; };
 		B9A92EA72A9DC6ED00797442 /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EA62A9DC6ED00797442 /* ServerManager.swift */; };
-		B9A92EAD2AA1D4CB00797442 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EAC2AA1D4CB00797442 /* LoadingViewController.swift */; };
 		B9A92EB12AA37FAD00797442 /* ObjectDetectingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EB02AA37FAD00797442 /* ObjectDetectingViewController.swift */; };
 		B9A92EB42AA3838200797442 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = B9A92EB32AA3838200797442 /* SnapKit */; };
 		B9A92EB62AA385C300797442 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A92EB52AA385C300797442 /* MapViewController.swift */; };
@@ -55,7 +54,6 @@
 		558918EC2208218800F182BA /* DrawingBoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingBoundingBoxView.swift; sourceTree = "<group>"; };
 		558918EE22089FFE00F182BA /* Measure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
 		B9A92EA62A9DC6ED00797442 /* ServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
-		B9A92EAC2AA1D4CB00797442 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		B9A92EB02AA37FAD00797442 /* ObjectDetectingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDetectingViewController.swift; sourceTree = "<group>"; };
 		B9A92EB52AA385C300797442 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		B9A92EBB2AA38C4F00797442 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -115,9 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				B9A92EA62A9DC6ED00797442 /* ServerManager.swift */,
-				B9A92EAC2AA1D4CB00797442 /* LoadingViewController.swift */,
 				554F14A4220362AC00B828B0 /* LaunchScreen.storyboard */,
 				554F149F220362AB00B828B0 /* Main.storyboard */,
+				B9A92EBD2AA38D7E00797442 /* MapView.storyboard */,
 				B9A92EB52AA385C300797442 /* MapViewController.swift */,
 				B9A92EBB2AA38C4F00797442 /* MapView.swift */,
 				554F149B220362AB00B828B0 /* AppDelegate.swift */,
@@ -128,7 +126,6 @@
 				71B8322222E2B0B200207D05 /* mlmodel */,
 				554F14A2220362AC00B828B0 /* Assets.xcassets */,
 				554F14A7220362AC00B828B0 /* Info.plist */,
-				B9A92EBD2AA38D7E00797442 /* MapView.storyboard */,
 			);
 			path = "ObjectDetection-CoreML";
 			sourceTree = "<group>";
@@ -280,7 +277,6 @@
 				553366CF220489DD00A67647 /* UIImage+CVPixelBuffer.swift in Sources */,
 				B9D47F2F2A1F6372009538D9 /* ObjectDetector.mlpackage in Sources */,
 				554F14AE220362DA00B828B0 /* VideoCapture.swift in Sources */,
-				B9A92EAD2AA1D4CB00797442 /* LoadingViewController.swift in Sources */,
 				B9A92EA72A9DC6ED00797442 /* ServerManager.swift in Sources */,
 				554F149C220362AB00B828B0 /* AppDelegate.swift in Sources */,
 			);
