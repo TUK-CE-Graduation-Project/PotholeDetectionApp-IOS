@@ -205,7 +205,7 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
     }
 
     func resizePreviewLayer() {
-        previewLayer.frame = videoPreview.bounds
+        videoCapture.previewLayer?.frame = videoPreview.bounds
     }
 }
 
