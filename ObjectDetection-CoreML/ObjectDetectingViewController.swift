@@ -53,33 +53,20 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
     let maf2 = MovingAverageFilter()
     let maf3 = MovingAverageFilter()
 
-    let additionalData: [String: Any] = [
-        "data": [
-            "geotabId": 0,
-            "xacc": 0,
-            "yacc": 0,
-            "zacc": 0,
-            "x": 0,
-            "y": 0
-        ],
-        "image": "string"
-    ]
     
     // MARK: - View Controller Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         getUserLocation()
-
-//        let videoPreview = UIView() // Create a new UIView
-//        videoPreview.frame = CGRect(x: 0, y: 0, width: 320, height: 240) // Set its frame as needed
-//        self.videoPreview = videoPreview
         
         // setup the model
         setUpModel()
-
+        print("====================================")
+        print("setUpCamera")
         // setup camera
         setUpCamera()
+        print("====================================")
 
         // setup delegate for performance measurement
         👨‍🔧.delegate = self
@@ -98,122 +85,6 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
             print("Lat: \(location.coordinate.latitude) \nLng: \(location.coordinate.longitude)")
         }
     }
-
-    func requestPOST() {
-            // [URL 지정 및 파라미터 값 지정 실시]
-        let urlComponents = URLComponents(string: "https://?/api/pothole/register")
-        let dicData = [
-            "potholeRegistrationRequest":[
-                "geotabId": 0,
-                "xacc": 0,
-                "yacc": 0,
-                "zacc": 0,
-                "point": [
-                    "x": 0,
-                    "y":0
-                ]
-            ] as [String : Any],
-            "video":"S"
-        ] as Dictionary<String, Any>?
-        let jsonData = try! JSONSerialization.data(withJSONObject: dicData!, options: [])
-
-
-            // [http 통신 타입 및 헤더 지정 실시]
-            var requestURL = URLRequest(url: (urlComponents?.url)!)
-            requestURL.httpMethod = "POST" // POST
-            requestURL.addValue("application/json", forHTTPHeaderField: "Content-Type") // POST
-        requestURL.httpBody = jsonData
-
-
-            // [http 요쳥을 위한 URLSessionDataTask 생성]
-            print("")
-            print("====================================")
-            print("[requestPOST : http post 요청 실시]")
-            print("url : ", requestURL)
-            print("====================================")
-            print("")
-            let dataTask = URLSession.shared.dataTask(with: requestURL) { (data, response, error) in
-
-                // [error가 존재하면 종료]
-                guard error == nil else {
-                    print("")
-                    print("====================================")
-                    print("[requestPOST : http post 요청 실패]")
-                    print("fail : ", error?.localizedDescription ?? "")
-                    print("====================================")
-                    print("")
-                    return
-                }
-
-                // [status 코드 체크 실시]
-                let successsRange = 200..<300
-                guard let statusCode = (response as? HTTPURLResponse)?.statusCode, successsRange.contains(statusCode)
-                else {
-                    print("")
-                    print("====================================")
-                    print("[requestPOST : http post 요청 에러]")
-                    print("error : ", (response as? HTTPURLResponse)?.statusCode ?? 0)
-                    print("msg : ", (response as? HTTPURLResponse)?.description ?? "")
-                    print("====================================")
-                    print("")
-                    return
-                }
-
-
-                // [response 데이터 획득, json 형태로 변환]
-                let resultCode = (response as? HTTPURLResponse)?.statusCode ?? 0
-                let resultLen = data! // 데이터 길이
-                do {
-                    guard let jsonConvert = try JSONSerialization.jsonObject(with: data!) as? [String: Any] else {
-                        print("")
-                        print("====================================")
-                        print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
-                        print("error : ", "json 형식 데이터 convert 에러")
-                        print("====================================")
-                        print("")
-                        return
-                    }
-                    guard let JsonResponse = try? JSONSerialization.data(withJSONObject: jsonConvert, options: .prettyPrinted) else {
-                        print("")
-                        print("====================================")
-                        print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
-                        print("error : ", "json 형식 데이터 변환 에러")
-                        print("====================================")
-                        print("")
-                        return
-                    }
-                    guard let resultString = String(data: JsonResponse, encoding: .utf8) else {
-                        print("Error: Couldn't print JSON in String")
-                        print("")
-                        print("====================================")
-                        print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
-                        print("error : ", "json 형식 데이터 >> String 변환 에러")
-                        print("====================================")
-                        print("")
-                        return
-                    }
-                    print("")
-                    print("====================================")
-                    print("[requestPOST_BODY_JSON : http post body json 요청 성공]")
-                    print("resultCode : ", resultCode)
-                    print("resultLen : ", resultLen)
-                    print("resultString : ", resultString)
-                    print("====================================")
-                    print("")
-                } catch {
-                    print("")
-                    print("====================================")
-                    print("[requestPOST_BODY_JSON : http post body json 요청 에러]")
-                    print("error : ", "Trying to convert JSON data to string")
-                    print("====================================")
-                    print("")
-                    return
-                }
-            }
-
-            // network 통신 실행
-            dataTask.resume()
-        }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -259,8 +130,12 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
             if success {
                 // add preview view on the layer
                 if let previewLayer = self.videoCapture.previewLayer {
+
                     DispatchQueue.main.async {
                         self.videoPreview.layer.addSublayer(previewLayer)
+                        print("++++++++++++++++++++++++")
+                        print("videoCapture 잘 들어갔나??", self.videoCapture.previewLayer)
+                        print("====================================")
                         print(self.videoPreview)
                         self.resizePreviewLayer()
                     }
@@ -330,7 +205,7 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
     }
 
     func resizePreviewLayer() {
-        videoCapture.previewLayer?.frame = videoPreview.bounds
+        previewLayer.frame = videoPreview.bounds
     }
 }
 
