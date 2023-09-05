@@ -181,7 +181,7 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
             // 캡처된 사진 처리 (예: 저장, 표시 등)
             // 캡처된 이미지는 'image' 변수를 통해 액세스할 수 있습니다.
             
-            ServerManager.shared.registerPothole(image: image)
+            ServerManager.shared.registerPotholeData(x: 0.0, y: 0.0, image: image)
 
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
 
