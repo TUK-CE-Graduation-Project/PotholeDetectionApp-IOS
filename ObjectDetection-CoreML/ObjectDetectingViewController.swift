@@ -52,6 +52,9 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
     let maf1 = MovingAverageFilter()
     let maf2 = MovingAverageFilter()
     let maf3 = MovingAverageFilter()
+    
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
 
     
     // MARK: - View Controller Life Cycle
@@ -80,9 +83,11 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
         locationManager?.allowsBackgroundLocationUpdates = true
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         if let location = locations.last {
             print("Lat: \(location.coordinate.latitude) \nLng: \(location.coordinate.longitude)")
+            self.latitude = location.coordinate.latitude
+            self.longitude = location.coordinate.longitude
         }
     }
 
@@ -181,7 +186,7 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
             // 캡처된 사진 처리 (예: 저장, 표시 등)
             // 캡처된 이미지는 'image' 변수를 통해 액세스할 수 있습니다.
             
-            ServerManager.shared.registerPotholeData(x: 0.0, y: 0.0, image: image)
+            ServerManager.shared.registerPotholeData(x: latitude, y: longitude, image: image)
 
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
 
@@ -240,12 +245,11 @@ extension ObjectDetectingViewController {
         if let predictions = request.results as? [VNRecognizedObjectObservation] {
 //            print(predictions.first?.labels.first?.identifier ?? "nil")
 //            print(predictions.first?.labels.first?.confidence ?? -1)
-            let threshold: Float = 0.65 // Set the confidence threshold here
+            let threshold: Float = 0.55 // Set the confidence threshold here
             _ = predictions.filter { $0.confidence >= threshold }
 
 
             if predictions.contains(where: { $0.label == "pothole"})&&predictions.contains(where: { $0.confidence >= threshold }) {
-                        // Capture a photo
                         capturePhoto()
                     }
             self.predictions = predictions

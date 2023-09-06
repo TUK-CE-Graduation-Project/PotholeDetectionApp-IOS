@@ -23,7 +23,6 @@ class ServerManager {
     let url = URL(string: "http://18.207.198.224:8080/api/pothole/register")!
 
 
-
     private init() {
         // Private initialization method to enforce the singleton pattern
     }
@@ -33,16 +32,19 @@ class ServerManager {
         
         let parameters: [String: Any] =
             [
-                "geotabId": 20,
-                "xacc": 1.0,
+                "geotabId": 0,
+                "xacc": 0.0,
                 "yacc": 0.0,
                 "zacc": 0.0,
-                "x": 37.60643331778227,
-                "y": 127.09282015041511
+                "x": x,
+                "y": y
             ]
+        
+        print("latitude \(x)")
+        print("longitude \(y)")
 
         AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
-            .validate(statusCode: 200..<300) // Ensure a successful response status code
+            .validate(statusCode: 200..<300) 
             .responseJSON { response in
                 switch response.result {
                 case .success(let value):
@@ -51,7 +53,6 @@ class ServerManager {
                             if let id = data["id"] as? Int {
                                 print("register id \(id)")
                                 
-                                // Call the uploadImage function with a valid id
                                 self.uploadImage(image: image, id: id)
                             } else {
                                 print("Error: 'id' is nil in the data received from the server.")
@@ -65,7 +66,6 @@ class ServerManager {
                         }
                     }
                 case .failure(let error):
-                    // Handle the error here
                     print("Error: \(error)")
                 }
             }
@@ -99,7 +99,6 @@ class ServerManager {
                         let message = jsonResponse["message"] as? String ?? ""
                         let responseData = jsonResponse["data"] as? [String: Any] ?? [:]
                         
-                        // Print the raw JSON response as a string
                         if let jsonDataString = String(data: data, encoding: .utf8) {
                             print("Raw JSON Response: \(jsonDataString)")
                         }
@@ -116,72 +115,4 @@ class ServerManager {
             }
         }
     }
-//    func uploadImage(image: UIImage, id: Int) {
-//
-//        print("id \(id)")
-//
-//        let url = URL(string: "http://18.207.198.224:8080/api/pothole/img/\(id)")!
-//
-//        // Boundary 설정
-//        let boundary = "Boundary-\(UUID().uuidString)"
-//
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "PUT"
-//
-//        // HTTP 헤더 설정
-//        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-//
-//        let body = NSMutableData()
-//
-//        print("Before HTTP Body Size: \(body.count) bytes")
-//
-//
-//        // 이미지 데이터 추가
-//        if let imageData = image.jpegData(compressionQuality: 0.8) {
-//            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-//            body.append("Content-Disposition: form-data; name=\"image\"; filename=\"\(String(describing: id)).jpeg\"\r\n".data(using: .utf8)!)
-//            body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
-//            body.append(imageData)
-//            body.append("\r\n".data(using: .utf8)!)
-//        }
-//
-//        request.httpBody = body as Data
-//
-//        print("After HTTP Body Size: \(body.count) bytes")
-//
-//
-//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//            if let error = error {
-//                print("이미지 업로드 실패. 에러: \(error)")
-//                return
-//            }
-//
-//            guard let data = data else {
-//                print("데이터가 없습니다.")
-//                return
-//            }
-//
-//            do {
-//                if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-//                    print("jsonResponse 데이터: \(jsonResponse)")
-//
-//                    let code = jsonResponse["code"] as? String ?? ""
-//                    let message = jsonResponse["message"] as? String ?? ""
-//                    let responseData = jsonResponse["data"] as? [String: Any] ?? [:]
-//
-//                    // 응답 데이터, 코드, 메시지 등을 처리합니다.
-//                    print("받은 데이터: \(responseData)")
-//                    print("응답 코드: \(code)")
-//                    print("응답 메시지: \(message)")
-//                } else {
-//                    print("JSON 응답 디코딩 오류.")
-//                }
-//            } catch {
-//                print("JSON 응답 디코딩 오류: \(error)")
-//            }
-//        }
-//
-//        task.resume()
-//    }
-
 }

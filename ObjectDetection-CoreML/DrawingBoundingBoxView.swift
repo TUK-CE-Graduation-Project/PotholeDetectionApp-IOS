@@ -40,7 +40,7 @@ class DrawingBoundingBoxView: UIView {
     
     func createLabelAndBox(prediction: VNRecognizedObjectObservation) {
         let confidence: Float = prediction.confidence
-        guard confidence > 0.6 else{
+        guard confidence > 0.55 else{
             return
         }
         let labelString: String? = prediction.label
