@@ -185,8 +185,16 @@ class ObjectDetectingViewController: UIViewController, AVCapturePhotoCaptureDele
         if let imageData = photo.fileDataRepresentation(), let image = UIImage(data: imageData) {
             // 캡처된 사진 처리 (예: 저장, 표시 등)
             // 캡처된 이미지는 'image' 변수를 통해 액세스할 수 있습니다.
-            
-            ServerManager.shared.registerPotholeData(x: latitude, y: longitude, image: image)
+            ServerManager.shared.getGeotabId(x: latitude, y: longitude) { geotabId in
+                if let id = geotabId {
+                    print("Received geotabId: \(id)")
+
+                    ServerManager.shared.registerPotholeData(x: self.latitude, y: self.longitude, image: image, geotabId: Int(id))
+                    
+                } else {
+                    print("Unable to retrieve geotabId.")
+                }
+            }
 
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
 
@@ -245,7 +253,7 @@ extension ObjectDetectingViewController {
         if let predictions = request.results as? [VNRecognizedObjectObservation] {
 //            print(predictions.first?.labels.first?.identifier ?? "nil")
 //            print(predictions.first?.labels.first?.confidence ?? -1)
-            let threshold: Float = 0.55 // Set the confidence threshold here
+            let threshold: Float = 0.65 // Set the confidence threshold here
             _ = predictions.filter { $0.confidence >= threshold }
 
 

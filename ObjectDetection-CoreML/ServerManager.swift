@@ -21,18 +21,19 @@ class ServerManager {
     
     // URL object definition
     let url = URL(string: "http://18.207.198.224:8080/api/pothole/register")!
+    
 
 
     private init() {
         // Private initialization method to enforce the singleton pattern
     }
 
-    func registerPotholeData(x: Double, y: Double, image: UIImage) {
+    func registerPotholeData(x: Double, y: Double, image: UIImage, geotabId: Int?) {
         let headers: HTTPHeaders = ["Content-Type": "application/json"]
         
         let parameters: [String: Any] =
             [
-                "geotabId": 0,
+                "geotabId": geotabId,
                 "xacc": 0.0,
                 "yacc": 0.0,
                 "zacc": 0.0,
@@ -40,7 +41,7 @@ class ServerManager {
                 "y": y
             ]
         
-        print("latitude \(x)")
+        print("geotabId \(geotabId)")
         print("longitude \(y)")
 
         AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
@@ -51,7 +52,6 @@ class ServerManager {
                     if let jsonResponse = value as? [String: Any] {
                         if let data = jsonResponse["data"] as? [String: Any] {
                             if let id = data["id"] as? Int {
-                                print("register id \(id)")
                                 
                                 self.uploadImage(image: image, id: id)
                             } else {
@@ -70,6 +70,65 @@ class ServerManager {
                 }
             }
 
+    }
+    
+    func getGeotabId(x: Double, y: Double, completion: @escaping (String?) -> Void) {
+        let url = URL(string: "http://18.207.198.224:8080/api/geotab/search/point")!
+        
+        let headers: HTTPHeaders = ["Content-Type": "application/json"]
+        
+        let parameters: [String: Any] = [
+            "x": x,
+            "y": y
+        ]
+        
+        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: 200..<300)
+            .responseJSON { response in
+                switch response.result {
+                case .success(let value):
+                    if let jsonResponse = value as? [String: Any] {
+                        if let data = jsonResponse["data"] as? [String: Any] {
+                            if let features = data["features"] as? [[String: Any]] {
+                                if let firstFeature = features.first {
+                                    if let properties = firstFeature["properties"] as? [String: Any] {
+                                        if let code = properties["code"] as? String {
+                                            print("GeotabId \(code)")
+                                            completion(code)
+                                        } else {
+                                            print("Error: 'code' is nil in the data received from the server.")
+                                            completion(nil)
+                                        }
+                                    } else {
+                                        print("Error: 'properties' is nil in the data received from the server.")
+                                        completion(nil)
+                                    }
+                                } else {
+                                    print("Error: 'firstFeature' is nil in the data received from the server.")
+                                    completion(nil)
+                                }
+                            } else {
+                                print("Error: 'features' is nil in the data received from the server.")
+                                completion(nil)
+                            }
+                        } else {
+                            print("Error: 'data' is nil in the data received from the server.")
+                            completion(nil)
+                        }
+                        
+                        let code = jsonResponse["code"] as? String
+                        let message = jsonResponse["message"] as? String
+                        
+                        print("GeotabId Data Response Code: \(String(describing: code))")
+                        print("GeotabId Data Response Message: \(String(describing: message))")
+                    }
+
+                case .failure(let error):
+                    print("Error: \(error)")
+                    completion(nil)
+                    
+                }
+            }
     }
 
 
